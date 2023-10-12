@@ -1,33 +1,32 @@
 package stopwords
 
 import (
-	"bufio"
-	"os"
+	_ "embed"
+	"strings"
 )
 
-const (
-	baiduStopwords = "./baidu_stopwords.txt"
-	cnStopwords    = "./cn_stopwords.txt"
-	hitStopwords   = "./hit_stopwords.txt"
-	scuStopwords   = "./scu_stopwords.txt"
-)
+//go:embed data/baidu_stopwords.txt
+var baiduStopwords string
+
+//go:embed data/cn_stopwords.txt
+var cnStopwords string
+
+//go:embed data/hit_stopwords.txt
+var hitStopwords string
+
+//go:embed data/scu_stopwords.txt
+var scuStopwords string
 
 var BaiduStopwords map[string]bool
 var CNStopwords map[string]bool
 var HITStopwords map[string]bool
 var SCUStopwords map[string]bool
 
-func readLines(filename string) map[string]bool {
-	file, err := os.Open(filename)
-	defer file.Close()
-	if err != nil {
-		panic(err)
-	}
-	sc := bufio.NewScanner(file)
-
+func readLines(data string) map[string]bool {
 	res := make(map[string]bool)
-	for sc.Scan() {
-		res[sc.Text()] = true
+	content := strings.Split(data, "\n")
+	for i := range content {
+		res[content[i]] = true
 	}
 	return res
 }
